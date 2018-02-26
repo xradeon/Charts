@@ -126,9 +126,10 @@ class BarChartViewController: DemoBaseViewController {
             chartView.notifyDataSetChanged()
         } else {
             set1 = BarChartDataSet(values: yVals, label: "The year 2017")
-            set1.colors = ChartColorTemplates.material()
+//            set1.colors = ChartColorTemplates.material()
+            set1.barGradientColors = [[UIColor.red, UIColor.blue]]
             set1.drawValuesEnabled = false
-            set1.barRoundingCornerRadius = 3.0
+            set1.barRoundingCornerRadius = 10.0
             set1.barRoundingCorners = [.topLeft , .topRight]
             
             let data = BarChartData(dataSet: set1)
