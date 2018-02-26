@@ -300,11 +300,6 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
             
             drawBar(context: context, dataSet: dataSet, index: j, barRect: barRect)
             
-            let cornerRadius = CGSize(width: dataSet.barRoundingCornerRadius, height: dataSet.barRoundingCornerRadius)
-            let bezierPath = UIBezierPath(roundedRect: barRect, byRoundingCorners: roundingCorners, cornerRadii: cornerRadius)
-            context.addPath(bezierPath.cgPath)
-            context.strokePath()
-            
             if drawBorder
             {
                 context.saveGState()

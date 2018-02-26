@@ -127,10 +127,11 @@ class BarChartViewController: DemoBaseViewController {
         } else {
             set1 = BarChartDataSet(values: yVals, label: "The year 2017")
 //            set1.colors = ChartColorTemplates.material()
-            set1.barGradientColors = [[UIColor.red, UIColor.blue]]
+            set1.barGradientColors = [[UIColor.yellow, UIColor.green]]
             set1.drawValuesEnabled = false
             set1.barRoundingCornerRadius = 10.0
             set1.barRoundingCorners = [.topLeft , .topRight]
+            set1.barBorderWidth = 0.0
             
             let data = BarChartData(dataSet: set1)
             data.setValueFont(UIFont(name: "HelveticaNeue-Light", size: 10)!)
