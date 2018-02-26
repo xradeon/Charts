@@ -177,10 +177,10 @@ open class CombinedChartView: BarLineChartViewBase, CombinedChartDataProvider
     }
     
     /// if set to true, a rounded rectangle with the corners is drawn on each bar
-    open var drawRoundedBarEnabled: Bool
+    open var drawRoundedBarCornerRadius: Double
     {
-        get { return (renderer as! CombinedChartRenderer!).drawRoundedBarEnabled }
-        set { (renderer as! CombinedChartRenderer!).drawRoundedBarEnabled = newValue }
+        get { return (renderer as! CombinedChartRenderer!).drawRoundedBarCornerRadius }
+        set { (renderer as! CombinedChartRenderer!).drawRoundedBarCornerRadius = newValue }
     }
     
     /// - returns: `true` if drawing values above bars is enabled, `false` ifnot
@@ -209,9 +209,6 @@ open class CombinedChartView: BarLineChartViewBase, CombinedChartDataProvider
     
     /// - returns: `true` the highlight is be full-bar oriented, `false` ifsingle-value
     open var isHighlightFullBarEnabled: Bool { return highlightFullBarEnabled }
-    
-    /// - returns: `true` if drawing rounded bars is enabled, `false` ifnot
-    open var isDrawRoundedBarEnabled: Bool { return drawRoundedBarEnabled }
     
     // MARK: - ChartViewBase
     

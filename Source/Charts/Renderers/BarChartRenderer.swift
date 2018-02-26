@@ -300,32 +300,18 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
             
             drawBar(context: context, dataSet: dataSet, index: j, barRect: barRect)
             
-            if dataProvider.isDrawRoundedBarEnabled
+            let cornerRadius = CGSize(width: dataSet.barRoundingCornerRadius, height: dataSet.barRoundingCornerRadius)
+            let bezierPath = UIBezierPath(roundedRect: barRect, byRoundingCorners: roundingCorners, cornerRadii: cornerRadius)
+            context.addPath(bezierPath.cgPath)
+            context.strokePath()
+            
+            if drawBorder
             {
-                let cornerRadius = CGSize(width: barRect.width / 2.0, height: barRect.width / 2.0)
-                let bezierPath = UIBezierPath(roundedRect: barRect, byRoundingCorners: roundingCorners, cornerRadii: cornerRadius)
-                context.addPath(bezierPath.cgPath)
-                context.fillPath()
-                
-                if drawBorder
-                {
-                    context.saveGState()
-                    context.setStrokeColor(borderColor.cgColor)
-                    context.setLineWidth(borderWidth)
-                    context.stroke(barRect)
-                    context.restoreGState()
-                }
-            }
-            else
-            {
-                if drawBorder
-                {
-                    context.saveGState()
-                    context.setStrokeColor(borderColor.cgColor)
-                    context.setLineWidth(borderWidth)
-                    context.stroke(barRect)
-                    context.restoreGState()
-                }
+                context.saveGState()
+                context.setStrokeColor(borderColor.cgColor)
+                context.setLineWidth(borderWidth)
+                context.stroke(barRect)
+                context.restoreGState()
             }
         }
         
@@ -340,7 +326,7 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
         {
             if let gradientColor = dataSet.barGradientColor(atIndex: index)
             {
-                drawGradient(context: context, barRect: barRect, gradientColors: gradientColor, orientation: dataSet.barGradientOrientation)
+                drawGradient(context: context, barRect: barRect, gradientColors: gradientColor, orientation: dataSet.barGradientOrientation, barRoundingCorners: dataSet.barRoundingCorners, cornerRadius: dataSet.barRoundingCornerRadius)
             }
         }
         else
@@ -348,13 +334,17 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
             // Set the color for the currently drawn value. If the index is out of bounds, reuse colors.
             let fillColor = dataSet.color(atIndex: index).cgColor
             context.setFillColor(fillColor)
-            context.fill(barRect)
+            let cornerRadius = CGSize(width: dataSet.barRoundingCornerRadius, height: dataSet.barRoundingCornerRadius)
+            let bezierPath = UIBezierPath(roundedRect: barRect, byRoundingCorners: dataSet.barRoundingCorners, cornerRadii: cornerRadius)
+            context.addPath(bezierPath.cgPath)
+//            context.strokePath()
+            context.fillPath()
         }
         
         context.restoreGState()
     }
     
-    open func drawGradient(context: CGContext, barRect: CGRect, gradientColors: Array<NSUIColor>, orientation: BarChartDataSet.BarGradientOrientation)
+    open func drawGradient(context: CGContext, barRect: CGRect, gradientColors: Array<NSUIColor>, orientation: BarChartDataSet.BarGradientOrientation, barRoundingCorners: UIRectCorner, cornerRadius: Double)
     {
         let cgColors = gradientColors.map{ $0.cgColor } as CFArray
         let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: cgColors, locations: nil)
@@ -373,9 +363,13 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
             endPoint = CGPoint(x: barRect.maxX, y: barRect.midY)
         }
         
-        let path = NSUIBezierPath.init(rect: barRect)
+//        let path = NSUIBezierPath.init(rect: barRect)
         
-        context.addPath(path.cgPath)
+        let cornerRadius = CGSize(width: cornerRadius, height: cornerRadius)
+        let bezierPath = UIBezierPath(roundedRect: barRect, byRoundingCorners: barRoundingCorners, cornerRadii: cornerRadius)
+        
+        context.addPath(bezierPath.cgPath)
+        context.strokePath()
         context.clip()
         context.drawLinearGradient(gradient!, start: startPoint, end: endPoint, options: [])
     }
@@ -693,6 +687,7 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 else { continue }
             
             let roundingCorners = set.barRoundingCorners
+            let roundingCornerRadius = set.barRoundingCornerRadius
             
             if let e = set.entryForXValue(high.x, closestToY: high.y) as? BarChartDataEntry
             {
@@ -736,17 +731,10 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 
                 setHighlightDrawPos(highlight: high, barRect: barRect)
                 
-                if dataProvider.isDrawRoundedBarEnabled
-                {
-                    let cornerRadius = CGSize(width: barRect.width / 2.0, height: barRect.width / 2.0)
-                    let bezierPath = UIBezierPath(roundedRect: barRect, byRoundingCorners: roundingCorners, cornerRadii: cornerRadius)
-                    context.addPath(bezierPath.cgPath)
-                    context.fillPath()
-                }
-                else
-                {
-                    context.fill(barRect)
-                }
+                let cornerRadius = CGSize(width: roundingCornerRadius, height: roundingCornerRadius)
+                let bezierPath = UIBezierPath(roundedRect: barRect, byRoundingCorners: roundingCorners, cornerRadii: cornerRadius)
+                context.addPath(bezierPath.cgPath)
+                context.fillPath()
             }
         }
         

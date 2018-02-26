@@ -23,7 +23,7 @@ open class CombinedChartRenderer: DataRenderer
     @objc open var drawBarShadowEnabled = false
     
     /// if set to true, a rounded rectangle with the corners is drawn on each bar
-    open var drawRoundedBarEnabled = false
+    open var drawRoundedBarCornerRadius = 0.0
     
     internal var _renderers = [DataRenderer]()
     
